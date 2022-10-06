@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
+header{
+	font-family: 'Jua', sans-serif;
+	margin : 0;
+	text-align: center;
+}
+p{
+	font-family: 'Jua', sans-serif;
+}
+h3{font-family: 'Jua', sans-serif;}
+
+div.wrap{
+	
+	font-family: 'Jua', sans-serif;
+	width: 1920px;
+	height: 100px;
+	background-color: #393E46;
+	
+}
+
+pre{font-family: 'Jua', sans-serif;}
+
+
+ul {
+	font-family: 'Jua', sans-serif;
+	font-size: 25px;
+    list-style-type: none;
+    margin: 0;
+    padding: 20px;
+
+}
+ul:after{
+	
+	font-family: 'Jua', sans-serif;
+    display: block;
+    clear:both;
+}
+
+li.menu_list{
+	
+	font-family: 'Jua', sans-serif;
+	padding: 0px 80px 0px 80px;
+    float: left;
+    display:inline;
+}
+li.menu_list a {
+	font-family: 'Jua', sans-serif;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+li.menu_list a:hover:not(.active) {
+	font-family: 'Jua', sans-serif;
+    background-color: #111;
+}
+
+li.todo_list{
+	font-family: 'Jua', sans-serif;
+	font-size : 15px;
+}
+
+td.rec {
+	font-family: 'Jua', sans-serif;
+	padding : 0px 20px 0px 20px;
+	border-style : none;
+	border-radius : 5px;
+	border-color : #000000;
+}

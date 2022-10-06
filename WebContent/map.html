@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>동물보호소 지도</title>
+ 	 <link rel="stylesheet" href="mainpage.css">
+
+<style type="text/css">
+
+
+        #map {
+            height: 600px;
+            width: 80%;
+            float: left;
+        }
+        
+        aside{
+        width : 20%;
+        float: left;
+        }
+        
+</style>
+</head>
+
+<body>
+<header>
+<a href="mainpage.html" class="link">
+<img src="images/logo.png" width="300px" height="300px"></a>
+</header>
+<div class="wrap"> 
+<nav class="menu_bar"> 
+ <ul class="menu">
+ 
+
+  <li class="menu_list"id = 'menu'> <a href="Community-view.html" class="link">커뮤니티</a> </li> 
+  <li class="menu_list" id = 'menu'> <a href="adoptHelper.html" class="link">입양 안내</a></li>
+  <li class="menu_list"id = 'menu'> <a href="map.html" class="link">지도</a> </li> 
+  <li class="menu_list"id = 'menu'> <a href="moreinfo.html" class="link">바로가기</a> </li> 
+  
+  </ul>
+  <img src="images/dog6.png" width="80px" height="80px">
+  </nav>
+</div>
+
+<aside>
+<br>
+지도는 숙명여자대학교를 중심으로 출력됩니다.<br><br>
+마커를 클릭해서 전국 보호소의 이름, 주소, 전화번호 등의 정보를 확인할 수 있습니다. <br>
+</aside>
+
+<section>
+<script>
+
+function initMap() {
+	const map = new google.maps.Map(document.getElementById("map"), {
+		zoom: 12,
+        center: {lat: 37.5448468654, lng: 126.9672216718},
+    });
+
+	let contents = [];
+	
+	const infowindow = new google.maps.InfoWindow();
+	
+	for (let i = 0; i < locations.length; i++) {
+		contents[i] = 
+			"<div><p>보호소명: " + locations[i].place + "<br>" + 
+			"도로명주소: " + locations[i].add + "<br>" + 
+			"지번주소: " + locations[i].old_add + "<br>" + 
+			"전화번호: " + locations[i].tel + "<br>" + 
+			"관리기관명: " + locations[i].manage + "<br>" + 
+			"동물보호센터유형: " + locations[i].group + "<br>" + 
+			"구조대상동물: " + locations[i].animal + "<br>" + 
+			"휴무일: " + locations[i].during + "<br>" + 
+			"수의사 수: " + locations[i].doc + "<br>" +
+			"사양관리사 수: " + locations[i].nurse + "<br>" +
+			"진료실 수: " + locations[i].lab + "<br>" +
+			"사육실 수: " + locations[i].room + "<br>" +
+			"사료보관실 수: " + locations[i].food + "<br>" +			
+			"구조운반용 차량: " + locations[i].car +  
+			"</p></div>";
+		
+		let marker = new google.maps.Marker({
+        	map: map,
+            position: new google.maps.LatLng(locations[i].lat, locations[i].lng),
+            });
+
+	    google.maps.event.addListener(marker, 'click', (function(marker, i){
+    		return function(){
+    			infowindow.setContent(contents[i]);
+    			infowindow.open(map, marker);
+    		}
+    	
+    	})(marker, i));
+    
+    	if(marker){
+    		marker.addListener('click', function(){
+    			map.setCenter(this.getPosition());
+    		});
+    	}
+	}
+}
+    
+    
+    const locations = [
+    	{place: "포항시동물보호센터", manage: "포항시 축산과", group: "단체", animal: "개+고양이+야생동물(유해조수 제외)", add: "경상북도 포항시 북구 흥해읍 덕장길 224", old_add: "경상북도 포항시 북구 흥해읍 덕장리 산67-2", lat:36.1454565, lng:129.3328157, during: "연중무휴", doc: "1명", nurse: "4명", lab: "-개", room: "-개", room2: "-개", food: "1개", car: "-대", tel: "054-262-8295"}, 
+    	{place: "영암 유기동물 삼호 보호소", manage: "전라남도 영암군청", group: "개인", animal: "개", add: "전라남도 영암군 삼호읍 녹색로 1117-49", old_add: "전라남도 영암군 삼호읍 산호리 277-21", lat:34.748372, lng:126.485851, during: "공휴일", doc: "0명", nurse: "1명", lab: "0개", room: "50개", room3: "3개", food: "1개", car: "0대", tel: "070-9599-5400"}, 
+    	{place: "하나동물병원", manage: "전라북도 남원시", group: "동물병원", animal: "개, 고양이", add: "전라북도 남원시 남문로 403 (왕정동)", old_add: "전라북도 남원시 남문로403", lat:35.4082186, lng:127.3697128, during: "일요일", doc: "1명", nurse: "1명", lab: "1개", room: "0개", room4: "12개", food: "1개", car: "1대", tel: "063-634-7582"}, 
+    	{place: "청원동물병원", manage: "전라북도 남원시", group: "동물병원", animal: "개, 고양이", add: "전라북도 남원시 용성로 150-1(죽항동)", old_add: "전라북도 남원시 용성로95", lat:35.4120944, lng:127.3917314, during: "일요일", doc: "1명", nurse: "1명", lab: "1개", room: "0개", room5: "9개", food: "1개", car: "1대", tel: "063-633-3533"}, 
+    	{place: "인천수의사회 유기동물보호소", manage: "인천수의사회", group: "법인", animal: "「동물보호법」에 따른 유실·유기동물", add: "인천광역시 계양구 다남로165번길 56(다남동)", old_add: "인천광역시 계양구 다남로165번길 56(다남동)", lat:37.5661963, lng:126.7196302, during: "연중무휴", doc: "1명", nurse: "3명", lab: "-개", room: "-개", room6: "-개", food: "-개", car: "-대", tel: "032-515-7567"}, 
+    	{place: "종합가축병원", manage: "문경시청", group: "동물병원", animal: "개+고양이", add: "경상북도 문경시 중앙로 170(흥덕동)", old_add: "경상북도 문경시 흥덕동 200-1", lat:36.599668, lng:128.202545, during: "일요일+공휴일", doc: "1명", nurse: "2명", lab: "-개", room: "-개", room7: "-개", food: "-개", car: "-대", tel: "054-552-2233"}, 
+    	{place: "부산동물보호센터", manage: "부산광역시 중구", group: "단체", animal: "유실,유기, 피학대 동물", add: "부산광역시 강서구 군라2길 206(대저2동)", old_add: "부산광역시 강서구 대저2동 5443-14", lat:35.134758, lng:128.928206, during: "일요일", doc: "1명", nurse: "2명", lab: "1개", room: "7개", room8: "1개", food: "1개", car: "3대", tel: "051-832-7119"}, 
+    	{place: "군산유기동물임시보호소", manage: "도그랜드", group: "동물병원", animal: "개", add: "전라북도 군산시 대야면 보덕안정길 108-20", old_add: "전라북도 군산시 대야면 보덕리 828-2", lat:35.960226, lng:126.81696, during: "없음", doc: "0명", nurse: "1명", lab: "0개", room: "5개", room9: "0개", food: "0개", car: "2대", tel: "063-454-2870"}, 
+    	{place: "진선동물병원", manage: "오산시청", group: "동물병원", animal: "개+고양이+햄스터", add: "경기도 오산시 성호대로 36", old_add: "경기도 오산시 오산동 609-55", lat:37.149088, lng:127.065198, during: "토요일+일요일+휴일", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room10: "1개", food: "1개", car: "2대", tel: "031-374-4644"}, 
+    	{place: "부산동물보호센터", manage: "부산광역시 서구청", group: "개인", animal: "개+고양이+기타", add: "부산광역시 강서구 군라2길 206 (대저2동)", old_add: "부산광역시 강서구 군라2길 206 (대저2동)", lat:35.13456442, lng:128.9282297, during: "일요일", doc: "1명", nurse: "1명", lab: "-개", room: "-개", room11: "-개", food: "-개", car: "-대", tel: "051-832-7119"}, 
+    	{place: "(사)한국동물구조관리협회", manage: "서울특별시 은평구청", group: "법인", animal: "개+고양이", add: "경기도 양주시 남면 감악산로 63-37(상수리)", old_add: "경기도 양주시 남면 상수리 410-1", lat:37.8700725, lng:126.9832252, during: "일요일,공휴일", doc: "1명", nurse: "6명", lab: "1개", room: "7개", room12: "1개", food: "1개", car: "5대", tel: "031-967-9119"}, 
+    	{place: "거제시유기동물보호소", manage: "경상남도 거제시", group: "법인", animal: "유기동물", add: "경상남도 거제시 사등면 두동로1길 109", old_add: "경상남도 거제시 사등면 사곡리 375-1", lat:34.883952, lng:128.573935, during: "연중무휴", doc: "0명", nurse: "3명", lab: "0개", room: "12개", room13: "2개", food: "-개", car: "-대", tel: "055-639-6366"}, 
+    	{place: "함안군동물보호소", manage: "함안군", group: "단체", animal: "개", add: "경상남도 함안군 가야읍 함안대로 755", old_add: "경상남도 함안군 가야읍 말산리 684-513", lat:35.293573, lng:128.397887, during: "없음", doc: "0명", nurse: "1명", lab: "1개", room: "2개", room14: "1개", food: "1개", car: "0대", tel: "055-580-4462"}, 
+    	{place: "신영재동물병원", manage: "인천광역시 계양구청", group: "동물병원", animal: "개,고양이 등", add: "인천광역시 계양구 장제로 923(병방동)", old_add: "인천광역시 계양구 병방동 426", lat:37.548821, lng:126.741361, during: "탄력운영", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room15: "1개", food: "1개", car: "1대", tel: "032-552-0075"}, 
+    	{place: "가평군 유기동물 보호소", manage: "경기도 가평군 미래발전국 농업정책과 가축방역팀", group: "동물병원", animal: "개+고양이", add: "경기도 가평군 아랫마장길 59(가평군 농업기술센터) 유기동물보호소", old_add: "경기도 가평군 가평읍 승안리 100", lat:37.845891, lng:127.497781, during: "토요일+일요일", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room16: "1개", food: "2개", car: "1대", tel: "031-580-4794"}, 
+    	{place: "금정동물병원", manage: "군포시", group: "동물병원", animal: "개(유기견)+고양이(다치거나 3개월령전의 새끼고양이)", add: "경기도 군포시 금산로 100 (산본동)", old_add: "경기도 군포시 산본동 213-9", lat:37.370857, lng:126.936744, during: "일요일", doc: "1명", nurse: "0명", lab: "-개", room: "-개", room17: "-개", food: "-개", car: "-대", tel: "031-394-2259"}, 
+    	{place: "누리동물보호센터", manage: "부산광역시 기장군청", group: "동물병원", animal: "개+고양이+기타", add: "부산광역시 해운대구 송정동 81-5", old_add: "부산광역시 해운대구 해운대로 1252", lat:35.196539, lng:129.206112, during: "공휴일", doc: "2명", nurse: "2명", lab: "1개", room: "8개", room18: "1개", food: "1개", car: "3대", tel: "051-709-7599"}, 
+    	{place: "펫토피아 동물병원", manage: "성남시청", group: "동물병원", animal: "동물보호법 제14조에 따른 구조/보호 조치 대상 동물", add: "경기도 성남시 분당구 불정로 266", old_add: "경기도 성남시 분당구 수내동 87-1", lat:37.367101, lng:127.127801, during: "주말, 공휴일", doc: "1명", nurse: "3명", lab: "3개", room: "3개", room19: "2개", food: "1개", car: "2대", tel: "031-174-8391"}, 
+    	{place: "죽전TNR동물병원", manage: "경기도 광주시청", group: "동물병원", animal: "개+고양이", add: "경기도 용인시 처인구 모현면 대지로 407", old_add: "경기도 용인시 처인구 모현면 오산리 193-28", lat:37.331092, lng:127.150982, during: "일요일+공휴일", doc: "2명", nurse: "2명", lab: "1개", room: "4개", room20: "1개", food: "2개", car: "1대", tel: "031-322-7586"}, 
+    	{place: "누리동물병원", manage: "동래구청", group: "법인", animal: "유기동물", add: "부산광역시 해운대구 해운대로 1252(송정동)", old_add: "부산광역시 해운대구 해운대로 1252(송정동)", lat:35.19653562, lng:129.2060944, during: "토,일,공휴일", doc: "1명", nurse: "5명", lab: "1개", room: "9개", room21: "1개", food: "1개", car: "3대", tel: "051-701-7599"}, 
+    	{place: "강현림동물병원", manage: "서울특별시 양천구청", group: "동물병원", animal: "반려동물", add: "서울특별시 양천구 등촌로 160", old_add: "서울특별시 양천구 등촌로 160", lat:37.544235, lng:126.86242, during: "매주일요일", doc: "1명", nurse: "2명", lab: "2개", room: "2개", room22: "2개", food: "1개", car: "1대", tel: "02-2642-9159"}, 
+    	{place: "이성준동물병원", manage: "경기도 안성시청", group: "동물병원", animal: "개,길고양이", add: "경기도 안성시 중앙로 431-1", old_add: "경기도 안성시 봉남동 326-2", lat:37.006555, lng:127.274781, during: "일요일", doc: "1명", nurse: "2명", lab: "2개", room: "2개", room23: "1개", food: "1개", car: "1대", tel: "031-673-5858"}, 
+    	{place: "한국동물구조관리협회", manage: "의정부시청", group: "법인", animal: "개", add: "경기도 양주시 남면 감악산로 63-37", old_add: "경기도 양주시 남면 상수리 410-1번지", lat:37.8700531, lng:126.9831861, during: "공휴일", doc: "1명", nurse: "7명", lab: "-개", room: "-개", room24: "-개", food: "-개", car: "-대", tel: "031-867-9119"}, 
+    	{place: "한국동물구조관리협회", manage: "경기도 양주시청", group: "법인", animal: "개+고양이+야생동물", add: "경기도 양주시 감악산로63-37", old_add: "경기도 양주시 감악산로63-37", lat:37.869921, lng:126.983316, during: "공휴일+일요일", doc: "1명", nurse: "8명", lab: "-개", room: "-개", room25: "-개", food: "-개", car: "-대", tel: "031-867-9119"}, 
+    	{place: "중앙동물병원", manage: "경상북도 의성군청", group: "동물병원", animal: "개", add: "경상북도 의성군 다인면 다인장길 17-1", old_add: "경상북도 의성군 다인면 다인장길 17-1", lat:36.446015, lng:128.35559, during: "매주 토요일 일요일 및 공휴일", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room26: "1개", food: "1개", car: "1대", tel: "054-862-2435"}, 
+    	{place: "인천광역시수의사회유기동물보호소", manage: "인천시수의사회", group: "단체", animal: "유기, 유실동물", add: "인천광역시 계양구 다남로165번길 56(다남동)", old_add: "인천광역시 계양구 다남동 35-8", lat:37.5661963, lng:126.7196301, during: "없음", doc: "1명", nurse: "3명", lab: "1개", room: "22개", room27: "1개", food: "2개", car: "2대", tel: "032-515-7567"}, 
+    	{place: "화순군동물보호센터", manage: "화순군청", group: "개인", animal: "개, 고양이", add: "전라남도 화순군 화순읍 한고을길42", old_add: "전라남도 화순군 화순읍 대리356", lat:35.053791, lng:126.973031, during: "연중무휴", doc: "0명", nurse: "0명", lab: "-개", room: "-개", room28: "1개", food: "-개", car: "1대", tel: "061-379-3655"}, 
+    	{place: "점곡동물보호센터", manage: "경상북도 청송군청", group: "개인", animal: "개", add: "경상북도 청송군 현동면 도평리 149", old_add: "경상북도 청송군 현동면 도평리 149", lat:36.304104, lng:129.0522909, during: "주말+공휴일", doc: "0명", nurse: "0명", lab: "-개", room: "-개", room29: "-개", food: "-개", car: "-대", tel: "054-870-6282"}, 
+    	{place: "쿨펫동물병원", manage: "울산광역시 북구청", group: "동물병원", animal: "개+고양이", add: "울산광역시 북구 진장유통로 64, 4층(진장동)", old_add: "울산광역시 북구 진장유통로 64, 4층(진장동)", lat:35.573311, lng:129.358311, during: "마트 휴무일", doc: "3명", nurse: "1명", lab: "1개", room: "1개", room30: "1개", food: "1개", car: "0대", tel: "052-288-7572"}, 
+    	{place: "이솝동물병원", manage: "울산광역시 북구청", group: "동물병원", animal: "개+고양이", add: "울산광역시 북구 호계로 262(호계동)", old_add: "울산광역시 북구 호계로 262(호계동)", lat:35.626931, lng:129.352021, during: "일요일+공휴일", doc: "2명", nurse: "1명", lab: "2개", room: "1개", room31: "1개", food: "1개", car: "0대", tel: "052-295-8875"}, 
+    	{place: "울산유기동물보호센터", manage: "울산광역시 북구청", group: "단체", animal: "개+고양이", add: "울산광역시 울주군 온양읍 화산발리로 543", old_add: "울산광역시 울주군 온양읍 화산발리로 543", lat:35.391018, lng:129.286237, during: "없음", doc: "1명", nurse: "5명", lab: "1개", room: "12개", room32: "1개", food: "1개", car: "2대", tel: "052-238-6113"}, 
+    	{place: "성일동물병원", manage: "철원군", group: "동물병원", animal: "개 고양이", add: "강원도 철원군 금학로 284-1", old_add: "강원도 철원군 동송읍 이평리 853-38", lat:38.209944, lng:127.21717, during: "공휴일", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room33: "1개", food: "1개", car: "1대", tel: "033-450-8905"}, 
+    	{place: "(사단)한국동물구조관리협회", manage: "서울특별시 서대문구청", group: "법인", animal: "개 등 주인을 잃은 반려동물", add: "경기도 양주시 남면 감악산로 63-37", old_add: "경기도 양주시 남면 상수리 410-1", lat:37.871359, lng:126.983988, during: "일요일, 공휴일", doc: "1명", nurse: "7명", lab: "1개", room: "6개", room34: "1개", food: "1개", car: "5대", tel: "031-867-9119"}, 
+    	{place: "부산동물보호센터", manage: "경상남도 김해시청", group: "단체", animal: "유기동물", add: "부산광역시 강서구 군라2길 206", old_add: "부산광역시 강서구 대저2동 5443-14", lat:35.1345653, lng:128.9282488, during: "일요일, 공휴일", doc: "1명", nurse: "5명", lab: "1개", room: "7개", room35: "2개", food: "3개", car: "2대", tel: "051-832-7119"}, 
+    	{place: "경동동물병원", manage: "중구", group: "동물병원", animal: "개, 고양이", add: "인천광역시 중구 개항로 68", old_add: "인천광역시 중구 경동 240-60", lat:37.471967, lng:126.629931, during: "없음", doc: "1명", nurse: "1명", lab: "1개", room: "2개", room36: "1개", food: "1개", car: "1대", tel: "032-765-9988"}, 
+    	{place: "신공항동물병원", manage: "중구", group: "동물병원", animal: "개, 고양이, 햄스터, 야생동물(고라니, 조류 등)", add: "인천광역시 중구 운중로 33", old_add: "인천광역시 중구 영종동 507-26", lat:37.493777, lng:126.537375, during: "없음", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room37: "1개", food: "1개", car: "1대", tel: "032-751-4598"}, 
+    	{place: "인천종합동물병원(송현점)", manage: "동구", group: "동물병원", animal: "개, 고양이", add: "인천광역시 동구 솔빛로 2", old_add: "인천광역시 동구 송현동 72-283", lat:37.476764, lng:126.633599, during: "없음", doc: "2명", nurse: "4명", lab: "2개", room: "1개", room38: "1개", food: "1개", car: "2대", tel: "032-765-0112"}, 
+    	{place: "인천수의사회 유기동물보호소", manage: "남구,연수구,남동구,옹진군", group: "동물병원", animal: "개, 고양이, 토끼, 기니픽, 고슴도치", add: "인천광역시 계양구 다남로165번길 56", old_add: "인천광역시 계양구 다남동 35-8", lat:37.566426, lng:126.719587, during: "없음", doc: "1명", nurse: "4명", lab: "1개", room: "5개", room39: "1개", food: "2개", car: "2대", tel: "032-515-7567"}, 
+    	{place: "백마동물병원", manage: "부평구", group: "동물병원", animal: "개, 고양이", add: "인천광역시 부평구 부평대로 132, 1층", old_add: "인천광역시 부평구 부평동 431-15", lat:37.503542, lng:126.722102, during: "일요일", doc: "1명", nurse: "4명", lab: "1개", room: "1개", room40: "1개", food: "1개", car: "2대", tel: "032-528-1359"}, 
+    	{place: "신영재동물병원", manage: "계양구", group: "동물병원", animal: "개, 고양이", add: "인천광역시 계양구 장제로 923", old_add: "인천광역시 계양구 병방동 428", lat:37.549119, lng:126.741393, during: "없음", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room41: "1개", food: "1개", car: "2대", tel: "032-552-0075"}, 
+    	{place: "가정동물병원", manage: "서구", group: "동물병원", animal: "개, 고양이", add: "인천광역시 서구 가정로 346", old_add: "인천광역시 서구 가정동 517-32", lat:37.515887, lng:126.673054, during: "없음", doc: "2명", nurse: "4명", lab: "2개", room: "3개", room42: "0개", food: "1개", car: "1대", tel: "032-575-0833"}, 
+    	{place: "베스트동물병원", manage: "강화군", group: "동물병원", animal: "개, 고양이, 염소, 돼지", add: "인천광역시 강화군 강화읍 강화대로 217", old_add: "인천광역시 강화군 강화읍 갑곳리 519-2", lat:37.740852, lng:126.504728, during: "일요일", doc: "1명", nurse: "1명", lab: "1개", room: "3개", room43: "1개", food: "1개", car: "1대", tel: "032-934-9340"}, 
+    	{place: "다나동물병원", manage: "전라북도 정읍시청", group: "동물병원", animal: "개+고양이", add: "전라북도 정읍시 충정로 199", old_add: "전라북도 정읍시 장명동 80-1", lat:35.5674928, lng:126.858887, during: "토요일 오후+일요일", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room44: "1개", food: "1개", car: "1대", tel: "063-537-1041"}, 
+    	{place: "청주시반려동물보호센터", manage: "청주시청", group: "단체", animal: "개, 고양이, 기타 등", add: "충청북도 청주시 흥덕구 서부로 411-55", old_add: "충청북도 청주시 흥덕구 강내면 태성리 산8", lat:36.6370179, lng:127.4674818, during: "일요일", doc: "2명", nurse: "3명", lab: "1개", room: "3개", room45: "1개", food: "1개", car: "1대", tel: "043-231-0047"}, 
+    	{place: "경동동물병원", manage: "경제정책과", group: "동물병원", animal: "개+고양이+기타", add: "인천광역시 중구 개항로 68", old_add: "인천광역시 중구 개항로 68", lat:37.471909, lng:126.6299454, during: "연중무휴", doc: "1명", nurse: "2명", lab: "-개", room: "-개", room46: "-개", food: "-개", car: "-대", tel: "032-765-9988"}, 
+    	{place: "신공항동물병원", manage: "경제정책과", group: "동물병원", animal: "개+고양이+기타", add: "인천광역시 중구 운중로 33", old_add: "인천광역시 중구 운중로 33", lat:37.4935221, lng:126.5351753, during: "연중무휴", doc: "1명", nurse: "2명", lab: "-개", room: "-개", room47: "-개", food: "-개", car: "-대", tel: "032-751-4598"}, 
+    	{place: "임시동물보호소", manage: "충청남도 보령시농업기술센터", group: "개인", animal: "개, 고양이, 염소", add: "충청남도 보령시 녹문1길 95", old_add: "충청남도 보령시 내항동 139-2", lat:36.3328368, lng:126.5879797, during: "없음", doc: "1명", nurse: "1명", lab: "1개", room: "2개", room48: "1개", food: "1개", car: "1대", tel: "041-000-0000"}, 
+    	{place: "무안군유기동물센터", manage: "전라남도 무안군청", group: "개인", animal: "개+고양이", add: "전라남도 무안군 무안읍 창포로 478-29", old_add: "전라남도 무안군 무안읍 신학리 869", lat:34.9806726, lng:126.4348844, during: "토요일+일요일", doc: "0명", nurse: "1명", lab: "-개", room: "2개", room49: "1개", food: "1개", car: "1대", tel: "000-000-0000"}, 
+    	{place: "한국동물구조관리협회", manage: "서울특별시 광진구청", group: "법인", animal: "유실동물", add: "경기도 양주시 남면 감악산로 63-37", old_add: "경기도 양주시 남면 상수리 410-1", lat:36.739808, lng:126.912685, during: "일요일+공휴일", doc: "1명", nurse: "7명", lab: "1개", room: "6개", room50: "1개", food: "1개", car: "8대", tel: "031-867-9119"}, 
+    	{place: "사랑애완동물병원", manage: "통영시", group: "동물병원", animal: "개,고양이", add: "경상남도 통영시 도산면 오륜리 1132", old_add: "경상남도 통영시 도산면 오륜리 1132", lat:34.908166, lng:128.313031, during: "없음", doc: "1명", nurse: "0명", lab: "1개", room: "1개", room51: "1개", food: "1개", car: "0대", tel: "055-648-7582"}, 
+    	{place: "구미유기동물보호소", manage: "경상북도 구미시청", group: "단체", animal: "개+고양이+애완동물", add: "경상북도 구미시 해평면 숭선로 309-11", old_add: "경상북도 구미시 해평면 해평리 448-5", lat:36.19478184, lng:128.3762696, during: "0", doc: "1명", nurse: "2명", lab: "0개", room: "3개", room52: "1개", food: "1개", car: "2대", tel: "054-441-4100"}, 
+    	{place: "파주시수의사회", manage: "파주시", group: "단체", animal: "개", add: "경기도 파주시 방촌로 1636", old_add: "경기도 파주시 문산읍 문산리 133-2번지", lat:37.860598, lng:126.778143, during: "공휴일", doc: "21명", nurse: "29명", lab: "17개", room: "17개", room53: "17개", food: "17개", car: "2대", tel: "031-952-7576"}, 
+    	{place: "누리동물병원", manage: "부산광역시 수영구청", group: "동물병원", animal: "개, 고양이 등 야생동물이 아닌 유기동물", add: "부산광역시 해운대구 해운대로 1252", old_add: "부산광역시 해운대구 송정동 81-5", lat:35.196783, lng:129.206121, during: "연중무휴", doc: "2명", nurse: "5명", lab: "1개", room: "9개", room54: "1개", food: "1개", car: "3대", tel: "051-701-7599"}, 
+    	{place: "(사)대구광역시수의사회", manage: "대구광역시 중구청", group: "동물병원", animal: "개+고양이+피학대 동물", add: "대구광역시 북구 호국로 229", old_add: "대구광역시 북구 서변동 1783-3", lat:35.922346, lng:128.599039, during: "없음", doc: "5명", nurse: "2명", lab: "4개", room: "4개", room55: "4개", food: "4개", car: "5대", tel: "053-764-3708"}, 
+    	{place: "유기동물보호관리협회", manage: "영도구청", group: "법인", animal: "개,고양이", add: "부산광역시 강서구 가락대로 1283번길 25-2(봉림동)", old_add: "부산광역시 강서구 봉림동 147-28", lat:35.17892388, lng:128.8997599, during: "변동", doc: "1명", nurse: "1명", lab: "1개", room: "40개", room56: "1개", food: "1개", car: "2대", tel: "051-971-6208"}, 
+    	{place: "스타동물병원", manage: "경기도 하남시청", group: "동물병원", animal: "개+고양이+등", add: "경기도 남양주시 별내2로 64, 202호(센타프라자)", old_add: "경기도 남양주시 별내2로 64, 202호(센타프라자)", lat:37.6465136, lng:127.1248094, during: "연중무휴", doc: "2명", nurse: "1명", lab: "-개", room: "-개", room57: "-개", food: "-개", car: "-대", tel: "031-528-8575"}, 
+    	{place: "하남동물병원", manage: "경기도 하남시청", group: "동물병원", animal: "개+고양이+등", add: "경기도 하남시 신평로 37(덕풍동)", old_add: "경기도 하남시 덕풍동 420-35번지", lat:37.5370682, lng:127.2040065, during: "일요일", doc: "1명", nurse: "3명", lab: "-개", room: "-개", room58: "-개", food: "-개", car: "-대", tel: "031-793-7802"}, 
+    	{place: "구례보호소", manage: "구례군청", group: "개인", animal: "개+고양이", add: "전라남도 구례군 문척면 구성1길 74-20", old_add: "전라남도 구례군 문척면 월전리 1517-3", lat:35.1976543, lng:127.4835919, during: "연중무휴", doc: "1명", nurse: "1명", lab: "-개", room: "-개", room59: "-개", food: "-개", car: "-대", tel: "000-0000-0000"}, 
+    	{place: "최상오동물병원", manage: "보은군", group: "동물병원", animal: "개,고양이 등 유기동물", add: "충청북도 보은군 보은읍 보은로 119-1", old_add: "충청북도 보은군 보은읍 삼산리 149-3", lat:36.486005, lng:127.718778, during: "없음", doc: "1명", nurse: "1명", lab: "1개", room: "10개", room60: "1개", food: "1개", car: "1대", tel: "043-543-0753"}, 
+    	{place: "진천동물병원", manage: "충청북도 진천군청", group: "동물병원", animal: "개+고양이", add: "충청북도 진천군 진천읍 문화6안길 14-1", old_add: "충청북도 진천군 진천읍 벽암리 133", lat:36.862278, lng:127.436167, during: "매주 토요일 일요일", doc: "1명", nurse: "1명", lab: "1개", room: "2개", room61: "1개", food: "1개", car: "2대", tel: "043-533-7212"}, 
+    	{place: "유기동물보호센터", manage: "울릉군", group: "법인", animal: "유기견", add: "경상북도 울릉군 울릉읍 신리길 68", old_add: "경상북도 울릉군 울릉읍 사동리714-2", lat:37.468136, lng:130.877469, during: "공휴일, 국경일", doc: "3명", nurse: "1명", lab: "0개", room: "3개", room62: "1개", food: "1개", car: "1대", tel: "054-790-6466"}, 
+    	{place: "인천수의사협회", manage: "인천광역시 미추홀구청", group: "법인", animal: "개", add: "인천광역시 계양구 다남로165번길56(다남동)", old_add: "인천광역시 계양구 다남동35-8", lat:37.5661963, lng:126.7174415, during: "연중무휴", doc: "1명", nurse: "6명", lab: "1개", room: "3개", room63: "1개", food: "1개", car: "1대", tel: "032-515-7567"}, 
+    	{place: "서구동물보호센터", manage: "대구광역시 서구청", group: "단체", animal: "개+고양이+기타동물", add: "대구광역시 북구 호국로 229", old_add: "대구광역시 북구 서변동 1783-3", lat:35.922347, lng:128.599041, during: "공휴일", doc: "5명", nurse: "5명", lab: "5개", room: "5개", room64: "5개", food: "5개", car: "1대", tel: "053-764-3708"}, 
+    	{place: "한사랑동물병원", manage: "전라북도 고창군", group: "동물병원", animal: "개,고양이", add: "전라북도 고창군 고창읍 보릿골로138", old_add: "전라북도 고창군 읍내리 681-69", lat:35.437929, lng:126.695974, during: "일요일", doc: "1명", nurse: "1명", lab: "-개", room: "9개", room65: "9개", food: "1개", car: "1대", tel: "063-562-9154"}, 
+    	{place: "우남동물병원", manage: "장성군", group: "동물병원", animal: "개,고양이", add: "전라남도 장성군 장성읍 청운길 19-1", old_add: "전라남도 장성군 장성읍 영천리 1273-88", lat:35.301425, lng:126.781015, during: "명절,휴가 등", doc: "1명", nurse: "0명", lab: "1개", room: "5개", room66: "1개", food: "1개", car: "1대", tel: "061-393-9776"}, 
+    	{place: "한국야생동물보호협회", manage: "경기도 시흥시청", group: "법인", animal: "반려동물", add: "경기도 안산시 상록구 청곡길 50", old_add: "경기도 안산시 상록구 부곡동 231-5", lat:37.34026022, lng:126.8700077, during: "일요일", doc: "1명", nurse: "2명", lab: "1개", room: "1개", room67: "1개", food: "1개", car: "1대", tel: "031-296-0124"}, 
+    	{place: "백호동물병원", manage: "경상남도 고성군청", group: "동물병원", animal: "개+고양이", add: "경상남도 고성군 고성읍 중앙로15번길 62", old_add: "경상남도 고성군 고성읍 서외리 253-23", lat:34.977085, lng:128.3223942, during: "매주 토요일 일요일", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room68: "1개", food: "1개", car: "1대", tel: "055-673-7194"}, 
+    	{place: "(사)유기동물 및 동물보호 관리협회", manage: "부산광역시 사상구청", group: "단체", animal: "개+고양이+기타", add: "부산광역시 강서구 가락대로1283번길 25-2(봉림동)", old_add: "부산광역시 강서구 봉림동 147-28", lat:35.178959, lng:128.899767, during: "탄력운영", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room69: "1개", food: "1개", car: "1대", tel: "051-971-6208"}, 
+    	{place: "횡성유기동물보호센터", manage: "횡성군청", group: "단체", animal: "개, 고양이", add: "강원도 원주시 호저면 칠봉로 110-6", old_add: "경기도 양주시 남면 상수리 410-1번지", lat:37.416564, lng:127.911534, during: "연중무휴", doc: "0명", nurse: "3명", lab: "-개", room: "1개", room70: "1개", food: "1개", car: "-대", tel: "033-731-1119"}, 
+    	{place: "사랑동물병원", manage: "울산광역시 남구청", group: "동물병원", animal: "개+고양이+기타", add: "울산광역시 남구 중앙로165-1(신정동)657번지 1호", old_add: "울산광역시 남구 신정동 657-1", lat:35.5358345, lng:129.313478, during: "매주 일요일 및 공휴일", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room71: "1개", food: "1개", car: "0대", tel: "052-273-0075"}, 
+    	{place: "미래펫동물병원", manage: "울산광역시 남구청", group: "동물병원", animal: "개+고양이+기타", add: "울산광역시 남구 중앙로 218-1(신정동)", old_add: "울산광역시 남구 신정동 186-9", lat:35.540423, lng:129.312282, during: "매주 일요일 및 공휴일", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room72: "1개", food: "1개", car: "0대", tel: "052-273-5911"}, 
+    	{place: "남산동물병원", manage: "울산광역시 남구청", group: "동물병원", animal: "개+고양이+기타", add: "울산광역시 남구 북부순환도로 40(무거동)", old_add: "울산광역시 남구 무거동 1434-3", lat:35.552002, lng:129.267939, during: "매주 일요일 및 공휴일", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room73: "1개", food: "1개", car: "0대", tel: "052-211-4113"}, 
+    	{place: "엔젤인독스 동물병원", manage: "울산광역시 남구청", group: "동물병원", animal: "개+고양이+기타", add: "울산광역시 남구 삼산로 104-1", old_add: "울산광역시 남구 달동 956번지", lat:35.535037, lng:129.319069, during: "매주 일요일 및 공휴일", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room74: "1개", food: "1개", car: "0대", tel: "052-269-6633"}, 
+    	{place: "스마일동물병원", manage: "울산광역시 남구청", group: "동물병원", animal: "개+고양이+기타", add: "울산광역시 남구 대학로112(무거동)", old_add: "울산광역시 남구 무거동 617-3", lat:35.5446881, lng:129.2609529, during: "매주 일요일 및 공휴일", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room75: "1개", food: "1개", car: "0대", tel: "052-277-0075"}, 
+    	{place: "갤러리동물병원", manage: "울산광역시 남구청", group: "동물병원", animal: "개+고양이+기타", add: "울산광역시 남구 삼산로 121", old_add: "울산광역시 남구 달동 629-14", lat:35.535887, lng:129.320589, during: "매주 일요일 및 공휴일", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room76: "1개", food: "1개", car: "0대", tel: "052-227-7572"}, 
+    	{place: "리틀쥬동물병원", manage: "울산광역시 남구청", group: "동물병원", animal: "개+고양이+기타", add: "울산광역시 남구 삼산로 162(달동)2층", old_add: "울산광역시 남구 달동 116-3", lat:35.541689, lng:129.306252, during: "매주 일요일 및 공휴일", doc: "2명", nurse: "1명", lab: "2개", room: "1개", room77: "1개", food: "1개", car: "0대", tel: "052-268-8884"}, 
+    	{place: "울산유기동물보호센터", manage: "울산광역시 남구청", group: "단체", animal: "개+고양이+기타", add: "울산광역시 울주군 온양읍 화산발리로 543", old_add: "울산광역시 울주군 온양읍 발리 1144", lat:35.391018, lng:129.286237, during: "공휴일", doc: "0명", nurse: "5명", lab: "1개", room: "12개", room78: "1개", food: "1개", car: "2대", tel: "052-238-6113"}, 
+    	{place: "영월군위탁관리보호소", manage: "강원도 영월군청", group: "개인", animal: "개+고양이", add: "강원도 영월군 영월읍 봉래산로 546-32", old_add: "강원도 영월군 영월읍 봉래산로 546-32", lat:37.223941, lng:128.466159, during: "토요일+일요일+공휴일", doc: "0명", nurse: "0명", lab: "-개", room: "-개", room79: "-개", food: "-개", car: "-대", tel: "033-370-1613"}, 
+    	{place: "강아지와고양이동물병원", manage: "이천시청", group: "동물병원", animal: "유기동물(개, 고양이 등)", add: "경기도 여주시 북내면 강문로 117", old_add: "경기도 여주시 가정리 458-1", lat:37.30392941, lng:127.6035667, during: "주말(토,일), 공휴일", doc: "2명", nurse: "2명", lab: "1개", room: "3개", room80: "1개", food: "1개", car: "1대", tel: "031-883-5199"}, 
+    	{place: "산청동물보호센터", manage: "산청동물보호수의사", group: "법인", animal: "개+고양이", add: "경상남도 산청군 산청읍 모고리 1349", old_add: "경상남도 산청군 산청읍 모고리 1349", lat:35.42615, lng:127.881065, during: "연중무휴", doc: "2명", nurse: "1명", lab: "1개", room: "2개", room81: "1개", food: "1개", car: "0대", tel: "055-970-7842"}, 
+    	{place: "충주시 반려동물보호센터", manage: "충주시 축산과", group: "단체", animal: "개+고양이+기타", add: "충청북도 충주시 중앙탑면 일곱실길 70", old_add: "충청북도 충주시 중앙탑면 용전리 산7-32", lat:37.00824686, lng:127.849822, during: "연중무휴", doc: "1명", nurse: "3명", lab: "1개", room: "1개", room82: "1개", food: "1개", car: "1대", tel: "043-851-3168"}, 
+    	{place: "홍천군유기동물보호소", manage: "홍천군청 축산과", group: "법인", animal: "개+고양이", add: "강원도 홍천군 화촌면 둔덕이길 68", old_add: "강원도 홍천군 화촌면 둔덕이길 68", lat:37.754971, lng:127.947423, during: "연중무휴", doc: "0명", nurse: "3명", lab: "-개", room: "-개", room83: "-개", food: "1개", car: "1대", tel: "033-434-9435"}, 
+    	{place: "사단법인 한국동물구조관리협회", manage: "양주시청", group: "법인", animal: "개+고양이+기타동물", add: "경기도 양주시 남면 감악산로 63-37(상수리)", old_add: "경기도 양주시 남면 감악산로 63-37", lat:37.8700531, lng:126.9831861, during: "일요일", doc: "1명", nurse: "7명", lab: "2개", room: "8개", room84: "2개", food: "1개", car: "5대", tel: "031-867-9119"}, 
+    	{place: "대전광역시 동물보호센터", manage: "대전광역시", group: "법인", animal: "개+고양이+토끼+햄스터+등", add: "대전광역시 유성구 갑동로15번길 20-39", old_add: "대전광역시 유성구 갑동 327-56", lat:36.363193, lng:127.286821, during: "연중무휴", doc: "1명", nurse: "7명", lab: "-개", room: "-개", room85: "-개", food: "-개", car: "-대", tel: "042-825-1118"}, 
+    	{place: "춘천시동물보호센터", manage: "춘천시 농업기술센터 축산과", group: "단체", animal: "유기동물(자생하는 길고양이 제외)단 다친 고양이나어미잃은 새끼고양이는구조대상에 포함", add: "강원도 춘천시 신북읍 아침못길 153-14", old_add: "강원도 춘천시 신북읍 유포리 619-9", lat:37.757687, lng:128.873749, during: "토요일, 일요일 및 법정공휴일", doc: "1명", nurse: "2명", lab: "1개", room: "12개", room86: "1개", food: "1개", car: "1대", tel: "033-250-4762"}, 
+    	{place: "강아지와고양이동물병원", manage: "여주시 양평군 이천시", group: "동물병원", animal: "개+고양이", add: "경기도 여주시 북내면 강문로 117", old_add: "경기도 여주시 북내면 가정리 458-1", lat:37.299672, lng:127.682363, during: "토+일", doc: "1명", nurse: "2명", lab: "1개", room: "2개", room87: "1개", food: "1개", car: "1대", tel: "031-883-5199"}, 
+    	{place: "울산유기동물보호센터", manage: "울산광역시 울주군청", group: "개인", animal: "개+고양이+기타", add: "울산광역시 울주군 온양읍 화산발리로 543", old_add: "울산광역시 울주군 온양읍 발리 1144", lat:35.391018, lng:129.286237, during: "공휴일", doc: "0명", nurse: "5명", lab: "1개", room: "12개", room88: "1개", food: "1개", car: "2대", tel: "052-238-6113"}, 
+    	{place: "와우동물병원", manage: "울산광역시 울주군청", group: "동물병원", animal: "개+고양이+기타", add: "울산광역시 울주군 언양읍 읍성로 135", old_add: "울산광역시 울주군 언양읍 동부리 370-15", lat:35.56492, lng:129.122905, during: "일요일", doc: "1명", nurse: "0명", lab: "1개", room: "1개", room89: "1개", food: "1개", car: "0대", tel: "052-225-0075"}, 
+    	{place: "범서조은동물병원", manage: "울산광역시 울주군청", group: "동물병원", animal: "개+고양이+기타", add: "울산광역시 울주군 범서읍 천상중앙길 49", old_add: "울산광역시 울주군 범서읍 천상리 371-2", lat:35.563515, lng:129.231009, during: "공휴일", doc: "1명", nurse: "5명", lab: "1개", room: "1개", room90: "1개", food: "1개", car: "0대", tel: "052-248-7582"}, 
+    	{place: "초록동물병원", manage: "울산광역시 울주군청", group: "동물병원", animal: "개+고양이+기타", add: "울산광역시 울주군 삼남면 상평강변길 3", old_add: "울산광역시 울주군 삼남면 교동리 1499-264", lat:35.56253, lng:129.121373, during: "일요일", doc: "1명", nurse: "3명", lab: "1개", room: "1개", room91: "1개", food: "1개", car: "0대", tel: "052-262-6114"}, 
+    	{place: "증평가정견훈련소", manage: "괴산군", group: "개인", animal: "유기견", add: "충청북도 증평군 도안면 입장길 239", old_add: "충청북도 증평군 도안면 송정리 12-3", lat:36.8404256, lng:127.6046672, during: "-", doc: "0명", nurse: "2명", lab: "1개", room: "1개", room92: "1개", food: "1개", car: "1대", tel: "000-0000-0000"}, 
+    	{place: "고성군임시보호소", manage: "고성군청", group: "개인", animal: "개", add: "강원도 고성군 죽왕면 가진리 460번지", old_add: "강원도 고성군 죽왕면 가진리 460번지", lat:38.369034, lng:128.493527, during: "공휴일", doc: "0명", nurse: "1명", lab: "0개", room: "2개", room93: "1개", food: "1개", car: "1대", tel: "033-680-3723"}, 
+    	{place: "중부벳동물병원", manage: "충청남도 아산시청", group: "동물병원", animal: "개+고양이+미니돼지+양,염소+설치류+파충류+애완조류", add: "충청남도 아산시 염치읍 충무로 295-9", old_add: "충청남도 아산시 염치읍 석정리 99-21", lat:36.806046, lng:127.005281, during: "연중무휴", doc: "1명", nurse: "2명", lab: "1개", room: "2개", room94: "1개", food: "1개", car: "2대", tel: "041-533-3563"}, 
+    	{place: "창원유기동물보호소", manage: "농업기술센터 창원기술지원과", group: "법인", animal: "개", add: "경상남도 창원시 의창구 창이대로 71 (명서동)", old_add: "경상남도 창원시 의창구 명서동 211", lat:35.238491, lng:128.645565, during: "주말 및 공휴일", doc: "0명", nurse: "1명", lab: "1개", room: "3개", room95: "1개", food: "1개", car: "0대", tel: "055-225-5391"}, 
+    	{place: "마산유기동물보호소", manage: "농업기술센터 마산기술지원과", group: "법인", animal: "개", add: "경상남도 창원시 마산합포구 지산2길 139-112", old_add: "경상남도 창원시 마산합포구 진북면 지산리 171-12", lat:35.119419, lng:128.468229, during: "주말 및 공휴일", doc: "0명", nurse: "1명", lab: "0개", room: "1개", room96: "1개", food: "1개", car: "1대", tel: "055-225-5625"}, 
+    	{place: "진해유기동물보호소", manage: "농업기술센터 진해기술지원과", group: "법인", animal: "개", add: "경상남도 창원시 진해구 웅천로 218 (성내동)", old_add: "경상남도 창원시 진해구 성내동 205", lat:35.114028, lng:128.754279, during: "주말 및 공휴일", doc: "0명", nurse: "1명", lab: "1개", room: "1개", room97: "1개", food: "1개", car: "1대", tel: "055-225-5703"}, 
+    	{place: "수성구유기동물보호센터", manage: "대구시수의사회", group: "법인", animal: "개,고양이,기타반려동물", add: "대구광역시 북구 호국로 229", old_add: "대구광역시 북구 서변동 1783-3", lat:35.922372, lng:128.599029, during: "국정공휴일", doc: "5명", nurse: "5명", lab: "3개", room: "34개", room98: "36개", food: "3개", car: "2대", tel: "053-764-3708"}, 
+    	{place: "영덕동물보호센터", manage: "경상북도 영덕군청", group: "법인", animal: "개+고양이", add: "경상북도 영덕군 영덕읍 구미2길 14-1", old_add: "경상북도 영덕군 영덕읍 구미2길 14-1", lat:36.437289, lng:129.355743, during: "연중무휴", doc: "1명", nurse: "1명", lab: "-개", room: "-개", room99: "-개", food: "-개", car: "-대", tel: "054-730-6286"}, 
+    	{place: "자인동물보호소", manage: "경산시", group: "동물병원", animal: "개,고양이", add: "경상북도 경산시 용성면 육동로 220-18(용성면)", old_add: "경상북도 경산시 부제리 737-1", lat:35.779577, lng:128.881925, during: "연중무휴", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room100: "-개", food: "-개", car: "1대", tel: "053-810-6713"}, 
+    	{place: "(사)한국야생동물보호협회 경기도남부지회", manage: "안산시농업기술센터 농업정책과", group: "법인", animal: "개+고양이+토끼+앵무새", add: "경기도 안산시 상록구 청곡길 50(부곡동)", old_add: "경기도 안산시 상록구 부곡동 231-5", lat:37.340129, lng:126.870048, during: "연중무휴", doc: "1명", nurse: "3명", lab: "1개", room: "5개", room101: "2개", food: "1개", car: "1대", tel: "031-296-0124"}, 
+    	{place: "가나동물병원", manage: "경상북도 경주시청", group: "동물병원", animal: "유실유기동물", add: "경상북도 경주시 금성로 385", old_add: "경상북도 경주시 성건동 698-8", lat:35.852134, lng:129.206636, during: "일요일", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room102: "1개", food: "1개", car: "0대", tel: "054-774-9975"}, 
+    	{place: "공원옆동물병원", manage: "경상북도 경주시청", group: "동물병원", animal: "유실유기동물", add: "경상북도 경주시 용담로 12", old_add: "경상북도 경주시 황성동 357-5", lat:35.860875, lng:129.219679, during: "일요일", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room103: "2개", food: "1개", car: "0대", tel: "054-771-0055"}, 
+    	{place: "태백유기동물", manage: "강원도 태백시", group: "개인", animal: "개", add: "강원도 태백시 문의재로 5(통동)", old_add: "강원도 태백시 통동 75-81", lat:37.172992, lng:129.040746, during: "연중무휴", doc: "0명", nurse: "1명", lab: "-개", room: "-개", room104: "-개", food: "-개", car: "-대", tel: "033-553-7000"}, 
+    	{place: "단양군유기동물보호소", manage: "단양군", group: "단체", animal: "개, 고양이 등 유기동물", add: "충청북도 단양군 단양산업단지2로 88-34", old_add: "충청북도 단양군 매포읍 단양산업단지2로 88-34", lat:37.017203, lng:128.301233, during: "없음", doc: "0명", nurse: "1명", lab: "0개", room: "3개", room105: "1개", food: "1개", car: "1대", tel: "043-422-4351"}, 
+    	{place: "대구유기동물보호센터", manage: "대구광역시 달서구청", group: "동물병원", animal: "개+고양이+기타애완동물일부", add: "대구광역시 동구 금강로 151-13", old_add: "대구광역시 동구 금강로 151-13", lat:35.86387448, lng:128.736059, during: "일요일+공휴일", doc: "1명", nurse: "3명", lab: "-개", room: "-개", room106: "-개", food: "-개", car: "-대", tel: "053-964-6258"}, 
+    	{place: "러브펫종합동물병원", manage: "서울특별시 관악구청", group: "동물병원", animal: "개+고양이+기타유기동물", add: "서울특별시 관악구 남부순환로 1451", old_add: "서울특별시 관악구 신림동 543-7", lat:37.481566, lng:126.9120098, during: "연중무휴", doc: "2명", nurse: "5명", lab: "-개", room: "-개", room107: "-개", food: "-개", car: "-대", tel: "02-837-8875"}, 
+    	{place: "KU건국동물병원", manage: "충청남도 예산군청", group: "동물병원", animal: "개+고양이", add: "충청남도 예산군 예산읍 벚꽃로 153", old_add: "충청남도 예산군 예산읍 벚꽃로 153", lat:36.694184, lng:126.836326, during: "일", doc: "2명", nurse: "2명", lab: "2개", room: "1개", room108: "1개", food: "1개", car: "2대", tel: "041-335-1023"}, 
+    	{place: "남양주동물보호협회", manage: "경기도 남양주시청", group: "단체", animal: "유실,유기동물(길고양이는 제외)+피학대동물 중 소유자 알수없거나, 적정한 치료및 보호를 받지 못하는 동물", add: "경기도 남양주시 금곡로 44", old_add: "경기도 남양주시 금곡동 427-28", lat:37.633921, lng:127.207921, during: "공휴일", doc: "1명", nurse: "2명", lab: "1개", room: "2개", room109: "2개", food: "2개", car: "1대", tel: "031-591-7270"}, 
+    	{place: "담양군유기동물보호센터", manage: "전라남도 담양군청", group: "법인", animal: "개+고양이", add: "전라남도 담양군 봉산면 대추길 111", old_add: "전라남도 담양군 봉산면 대추리 124-2", lat:35.293445, lng:126.970192, during: "연중무휴", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room110: "20개", food: "1개", car: "1대", tel: "061-380-0000"}, 
+    	{place: "삼척시유기동물보호소", manage: "삼척시청 축산과", group: "개인", animal: "개+고양이", add: "강원도 삼척시 척주로 131 아름애견", old_add: "강원도 삼척시 정상동 448-8", lat:37.4419669, lng:129.1774042, during: "공휴일", doc: "0명", nurse: "2명", lab: "0개", room: "1개", room111: "1개", food: "1개", car: "1대", tel: "033-574-4942"}, 
+    	{place: "제천시동물보호센터", manage: "충청북도 제천시", group: "단체", animal: "1.유실유기동물 2. 피학대 동물 중 소유자를 알 수 없는 동물 3. 소유자로부터 제8조제2항에 따른 학대를 받아 적정하게 치료보호받을 수 없다고 판단되는 동물", add: "충청북도 제천시 산곡동 94-1", old_add: "충청북도 제천시 산곡동 94-1", lat:37.09702461, lng:128.2034261, during: "토,일요일,공휴일", doc: "0명", nurse: "1명", lab: "0개", room: "29개", room112: "2개", food: "1개", car: "1대", tel: "043-647-0059"}, 
+    	{place: "세종시 유기동물지정병원", manage: "세종특별자치시", group: "동물병원", animal: "개+고양이", add: "세종특별자치시 장군면 장척로 274", old_add: "세종특별자치시 장군면 장척로 274", lat:36.48897661, lng:127.195688, during: "토요일+일요일", doc: "1명", nurse: "1명", lab: "-개", room: "-개", room113: "-개", food: "-개", car: "-대", tel: "044-864-7579"}, 
+    	{place: "백마동물병원", manage: "인천광역시 부평구", group: "동물병원", animal: "개+고양이+기타(고슴도치, 앵무새, 토끼, 햄스터 등)", add: "인천광역시 부평구 부평대로 132 (부평동)", old_add: "인천광역시 부평구 부평동 431-15", lat:37.503228, lng:126.721889, during: "토요일+공휴일", doc: "1명", nurse: "2명", lab: "1개", room: "2개", room114: "1개", food: "1개", car: "1대", tel: "032-528-1359"}, 
+    	{place: "강진군유기견보호소", manage: "강진군청", group: "법인", animal: "개", add: "전라남도 강진군 강진읍 남당로 97-73", old_add: "전라남도 강진군 강진읍 남당로 97-73", lat:34.6236226, lng:126.7766094, during: "주말,공휴일", doc: "1명", nurse: "1명", lab: "0개", room: "8개", room115: "1개", food: "0개", car: "0대", tel: "061-430-3613"}, 
+    	{place: "답21동물병원", manage: "충청남도 서산시청", group: "동물병원", animal: "유기견", add: "충청남도 서산시 호수공원12로 13", old_add: "충청남도 서산시 예천동 1300-7", lat:36.766397, lng:126.442097, during: "공휴일", doc: "1명", nurse: "0명", lab: "-개", room: "-개", room116: "-개", food: "-개", car: "-대", tel: "041-666-0750"}, 
+    	{place: "서산동물병원", manage: "충청남도 서산시청", group: "동물병원", animal: "유기견", add: "충청남도 서산시 안견로 235", old_add: "충청남도 서산시 동문동 1024-6", lat:36.778174, lng:126.457463, during: "공휴일", doc: "2명", nurse: "0명", lab: "-개", room: "-개", room117: "-개", food: "-개", car: "-대", tel: "041-667-5525"}, 
+    	{place: "원주시유기동물보호센터", manage: "강원도 원주시청", group: "개인", animal: "개+고양이", add: "강원도 원주시 호저면 칠봉로 110-6", old_add: "강원도 원주시 호저면 주산리 산87-5", lat:37.416061, lng:127.911829, during: "연중무휴", doc: "1명", nurse: "0명", lab: "1개", room: "4개", room118: "1개", food: "1개", car: "1대", tel: "033-737-1119"}, 
+    	{place: "서울시 야생동물 구조관리센터", manage: "서울특별시 자연생태과", group: "단체", animal: "개+고양이+원숭이", add: "서울특별시 관악구 관악로1(신림동, 서울대학교 수의과대학 야생동물센터)", old_add: "서울특별시 관악구 신림동 산56-1(서울대학교 수의과대학 야생동물센터)", lat:37.467501, lng:126.953611, during: "연중무휴", doc: "1명", nurse: "0명", lab: "1개", room: "1개", room119: "1개", food: "1개", car: "2대", tel: "02-880-8659"}, 
+    	{place: "(사)한국동물구조관리협회", manage: "서울특별시 강남구청", group: "법인", animal: "개+고양이+햄스터+앵무새", add: "경기도 양주시 남면 감악산로 63-37", old_add: "경기도 양주시 남면 상수리 410-1", lat:37.871317, lng:126.983956, during: "일요일", doc: "1명", nurse: "6명", lab: "1개", room: "5개", room120: "1개", food: "1개", car: "1대", tel: "031-867-9119"}, 
+    	{place: "강아지와고양이동물병원", manage: "양평군", group: "동물병원", animal: "유실·유기동물", add: "경기도 여주시 북내면 강문로 117", old_add: "경기도 여주시 북내면 강문로 117", lat:37.299028, lng:127.682424, during: "토,일, 공휴일", doc: "2명", nurse: "2명", lab: "1개", room: "4개", room121: "1개", food: "1개", car: "1대", tel: "031-883-5199"}, 
+    	{place: "누리동물보호센터", manage: "해운대구청", group: "동물병원", animal: "유기유실동물 및 피학대동물", add: "부산광역시 해운대구 해운대로 1252(송정동)", old_add: "부산광역시 해운대구 송정동 81-5", lat:35.19653562, lng:129.2060944, during: "구조보호활동 휴무 없음(사무실은 주말 휴무)", doc: "2명", nurse: "2명", lab: "1개", room: "5개", room122: "1개", food: "1개", car: "2대", tel: "051-701-7599"}, 
+    	{place: "가정동물병원", manage: "인천광역시 서구청", group: "동물병원", animal: "유기동물", add: "인천광역시 서구 가정로 346", old_add: "인천광역시 서구 가정동 517-32", lat:37.515592, lng:126.672994, during: "추석, 설명절", doc: "2명", nurse: "1명", lab: "2개", room: "3개", room123: "1개", food: "-개", car: "1대", tel: "032-575-0833"}, 
+    	{place: "고양시동물보호센터", manage: "농업기술센터", group: "동물병원", animal: "유기유실동물, 부상길고양이, 3개월령 이하 길고양이", add: "경기도 고양시 덕양구 고양대로 1695", old_add: "경기도 고양시 덕양구 원흥동 471-10", lat:37.649912, lng:126.870154, during: "연중무휴", doc: "1명", nurse: "4명", lab: "1개", room: "7개", room124: "3개", food: "1개", car: "2대", tel: "031-962-3232"}, 
+    	{place: "다온 유기동물 보호센터", manage: "축산진흥과", group: "개인", animal: "개, 고양이", add: "경상북도 상주시 북상주로 261", old_add: "경상북도 상주시 부원동 149", lat:36.452839, lng:128.163931, during: "연중무휴", doc: "1명", nurse: "3명", lab: "1개", room: "1개", room125: "1개", food: "1개", car: "1대", tel: "000-0000-0000"}, 
+    	{place: "옥천동물병원", manage: "옥천군청", group: "동물병원", animal: "반려동물", add: "충청북도 옥천군 옥천읍 삼금로 53", old_add: "충청북도 옥천군 옥천읍 삼양리 222-201", lat:36.303037, lng:127.568781, during: "없음", doc: "2명", nurse: "3명", lab: "1개", room: "10개", room126: "1개", food: "1개", car: "1대", tel: "043-732-8844"}, 
+    	{place: "칠곡군 동물보호센터", manage: "칠곡 유기견사랑", group: "단체", animal: "개, 부상당한 고양이, 어미잃은 2개월령 이하 새끼 고양이", add: "경상북도 칠곡군 석적읍 포망로 341", old_add: "경상북도 칠곡군 석적읍 망정리 770-2", lat:36.341008, lng:128.441937, during: "일요일", doc: "0명", nurse: "2명", lab: "0개", room: "15개", room127: "1개", food: "1개", car: "1대", tel: "054-973-5710"}, 
+    	{place: "강북동물병원", manage: "공주시청", group: "개인", animal: "반려동물", add: "충청남도 공주시 신관동 번영1로 54", old_add: "충청남도 공주시 신관동 642-1", lat:36.4723104, lng:127.1343132, during: "일요일,공휴일", doc: "1명", nurse: "1명", lab: "1개", room: "1개", room128: "1개", food: "1개", car: "1대", tel: "041-856-9900"}, 
+    	{place: "천안시동물보호센터", manage: "사단법인 동아이", group: "법인", animal: "유기 및 학대 동물", add: "충청남도 천안시 서북구 천안천3길 36(와촌동) / 천안시 동남구 목천읍 학수소사길 132", old_add: "충청남도 천안시 서북구 와촌동 126-90 / 천안시 동남구 목천읍 소사리 178", lat:36.7711676, lng:127.257782, during: "연중무휴", doc: "0명", nurse: "0명", lab: "0개", room: "2개", room129: "2개", food: "2개", car: "2대", tel: "050-5995-9119"}, 
+];
+
+</script>
+
+<div id="map"></div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtADsYo9e0alGMW_8h6qj8K9ELbdbFIVI&callback=initMap&libraries=&v=weekly"></script>
+
+</section>
+</body>
+</html>
